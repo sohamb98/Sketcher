@@ -25,13 +25,26 @@ int main() {
 	VideoCapture cam(0);
 	while (1) {
 		cam >> img;
+
+		//convertin the frame to black and white 
 		cvtColor(img, img_grey, CV_RGB2GRAY);
 		namedWindow("camfeed", WINDOW_AUTOSIZE);
 		imshow("camfeed", img);
 		namedWindow("greyscale", WINDOW_AUTOSIZE);
 		imshow("greyscale", img_grey);
 
-		threshold(img_grey, threshimg, thresh, maxValue, THRESH_BINARY);
+		//Finding the canny edge
+		namedWindow("CannyEdge", WINDOW_AUTOSIZE);
+		createTrackbar("MinThreshold:", "CannyEdge", &lowThreshold, max_lowThreshold);
+
+		blur(img_grey, edge, Size(3, 3));
+
+		Canny(edge, edge, lowThreshold, lowThreshold*ratio, 3);
+		edge.convertTo(draw, CV_8U);
+		imshow("CannyEdge", draw);
+
+        //thresholding to create a sketch
+		threshold(edge, threshimg, thresh, maxValue, THRESH_BINARY_INV);
 		namedWindow("threshold", WINDOW_AUTOSIZE);
 
 		char TrackbarName[50]="Threhold Slider";
@@ -40,15 +53,6 @@ int main() {
 		thresh = thresh_slide;
 
 		imshow("threshold", threshimg);
-
-		namedWindow("CannyEdge", WINDOW_AUTOSIZE);
-		createTrackbar("MinThreshold:", "CannyEdge", &lowThreshold, max_lowThreshold);
-
-		blur(img_grey,edge, Size(3, 3));
-
-		Canny(edge, edge, lowThreshold, lowThreshold*ratio, 3);
-		edge.convertTo(draw, CV_8U);
-		imshow("CannyEdge", draw);
 
 		
 		if (waitKey(1)==27) {
