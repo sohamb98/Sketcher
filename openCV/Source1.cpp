@@ -20,6 +20,9 @@ int main() {
 	Mat threshimg;
 	Mat edge;
 	Mat draw;
+
+	cout << "Welcome to the live image sketcher" << endl;
+	cout << "To close the application after having fun press escape " << endl;
 	
 	double maxValue = 255;
 	VideoCapture cam(0);
@@ -45,14 +48,13 @@ int main() {
 
         //thresholding to create a sketch
 		threshold(edge, threshimg, thresh, maxValue, THRESH_BINARY_INV);
-		namedWindow("threshold", WINDOW_AUTOSIZE);
+		namedWindow("Sketch", WINDOW_AUTOSIZE);
 
 		char TrackbarName[50]="Threhold Slider";
-		createTrackbar(TrackbarName, "threshold", &thresh_slide, thresh_max);
-		cout << thresh_slide;
+		createTrackbar(TrackbarName, "Sketch", &thresh_slide, thresh_max);
 		thresh = thresh_slide;
 
-		imshow("threshold", threshimg);
+		imshow("Sketch", threshimg);
 
 		
 		if (waitKey(1)==27) {
